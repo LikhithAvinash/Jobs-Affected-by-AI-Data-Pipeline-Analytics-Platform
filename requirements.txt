@@ -1,0 +1,21 @@
+# Core
+prefect>=2.14,<3.0
+sqlalchemy>=2.0
+psycopg2-binary>=2.9
+pandas>=2.1
+requests>=2.31
+python-dotenv>=1.0
+
+# Database migrations
+alembic>=1.13
+
+# ML (optional)
+scikit-learn>=1.3
+xgboost>=2.0
+
+# Testing
+pytest>=7.4
+pytest-mock>=3.12
+
+# Linting
+ruff>=0.1

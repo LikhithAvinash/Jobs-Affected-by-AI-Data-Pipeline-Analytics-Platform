@@ -1,0 +1,170 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "title": "🤖 AI Automation Risk Distribution",
+      "description": "Percentage of jobs at each AI replacement risk level",
+      "type": "piechart",
+      "gridPos": { "h": 10, "w": 8, "x": 0, "y": 0 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT risk_category || ' (' || percentage || '%)' AS risk_level, job_count FROM vw_risk_distribution;",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "High" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "#F2495C", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Medium" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "#FF9830", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Low" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "#73BF69", "mode": "fixed" } }]
+          }
+        ]
+      }
+    },
+    {
+      "title": "📊 Risk Breakdown by Job Source",
+      "description": "How many high/medium/low risk jobs from each data source",
+      "type": "barchart",
+      "gridPos": { "h": 10, "w": 8, "x": 8, "y": 0 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT source, high_risk, medium_risk, low_risk FROM vw_risk_by_source;",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        }
+      },
+      "options": {
+        "stacking": "normal"
+      }
+    },
+    {
+      "title": "🏢 Average Risk % by Company",
+      "description": "Companies ranked by average AI replacement risk of their job postings",
+      "type": "barchart",
+      "gridPos": { "h": 10, "w": 8, "x": 16, "y": 0 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT company_name, avg_risk_pct FROM vw_risk_by_company ORDER BY avg_risk_pct DESC LIMIT 15;",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "title": "⚠️ Known Occupation Automation Risk (Research Data)",
+      "description": "AI automation risk percentages from Frey & Osborne research — occupations most likely to be replaced by AI",
+      "type": "table",
+      "gridPos": { "h": 12, "w": 12, "x": 0, "y": 10 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT occupation_name AS \"Occupation\", automation_risk_pct AS \"AI Risk %\", risk_category AS \"Risk Level\" FROM vw_occupation_risk;",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "AI Risk %" },
+            "properties": [
+              { "id": "unit", "value": "percent" },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 30 },
+                { "color": "orange", "value": 60 },
+                { "color": "red", "value": 80 }
+              ]}}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "🔴 High Risk Jobs (Most Likely Replaced by AI)",
+      "description": "Individual job postings classified as HIGH risk for AI automation",
+      "type": "table",
+      "gridPos": { "h": 12, "w": 12, "x": 12, "y": 10 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT title AS \"Job Title\", company_name AS \"Company\", location AS \"Location\", risk_pct AS \"AI Risk %\", source AS \"Source\" FROM vw_high_risk_jobs LIMIT 50;",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "title": "🟢 Safe Jobs (Growing Despite AI)",
+      "description": "Job titles with the LOWEST automation risk — roles that AI is LEAST likely to replace",
+      "type": "table",
+      "gridPos": { "h": 12, "w": 12, "x": 0, "y": 22 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT title AS \"Job Title\", company_name AS \"Company\", location AS \"Location\", risk_pct AS \"AI Risk %\", source AS \"Source\" FROM vw_low_risk_jobs LIMIT 50;",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "title": "📈 AI Risk % by Job Title (Aggregated)",
+      "description": "Average automation risk percentage grouped by job title",
+      "type": "barchart",
+      "gridPos": { "h": 12, "w": 12, "x": 12, "y": 22 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT title, avg_risk_pct FROM vw_risk_by_title ORDER BY avg_risk_pct DESC LIMIT 25;",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "continuous-RdYlGr" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 30 },
+              { "color": "red", "value": 60 }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "refresh": "1h",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": ["ai", "automation", "risk"],
+  "templating": { "list": [] },
+  "time": { "from": "now-90d", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "AI Automation Risk Analysis",
+  "uid": "ai-automation-risk",
+  "version": 1
+}

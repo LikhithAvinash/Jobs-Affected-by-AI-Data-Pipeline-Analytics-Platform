@@ -1,0 +1,111 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "title": "Top Skills by Job Demand",
+      "type": "barchart",
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT skill_name, job_count FROM vw_skill_demand ORDER BY job_count DESC LIMIT 20;",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        }
+      }
+    },
+    {
+      "title": "Jobs by Source",
+      "type": "piechart",
+      "gridPos": { "h": 10, "w": 6, "x": 12, "y": 0 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT source, total_jobs FROM vw_jobs_by_source;",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "title": "Average Salary Range by Source",
+      "type": "barchart",
+      "gridPos": { "h": 10, "w": 6, "x": 18, "y": 0 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT source, avg_salary_min, avg_salary_max FROM vw_jobs_by_source;",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "title": "Daily Job Posting Trends",
+      "type": "timeseries",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 10 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT posted_date AS time, source, jobs_posted FROM vw_daily_job_postings WHERE posted_date > CURRENT_DATE - INTERVAL '90 days' ORDER BY posted_date;",
+          "format": "time_series"
+        }
+      ]
+    },
+    {
+      "title": "Top Hiring Companies",
+      "type": "table",
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 20 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT company_name, job_count, avg_max_salary FROM vw_top_companies LIMIT 20;",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "title": "AI Research Papers by Category",
+      "type": "barchart",
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 20 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT category, paper_count FROM vw_ai_research_by_category ORDER BY paper_count DESC LIMIT 15;",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "title": "Skill Salary Comparison",
+      "type": "barchart",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 30 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "targets": [
+        {
+          "rawSql": "SELECT skill_name, avg_salary_min, avg_salary_max FROM vw_skill_demand WHERE avg_salary_min IS NOT NULL ORDER BY avg_salary_max DESC LIMIT 20;",
+          "format": "table"
+        }
+      ]
+    }
+  ],
+  "refresh": "1h",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": ["ai", "jobs", "skills"],
+  "templating": { "list": [] },
+  "time": { "from": "now-90d", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "AI Job Market Intelligence",
+  "uid": "ai-job-market-main",
+  "version": 1
+}
