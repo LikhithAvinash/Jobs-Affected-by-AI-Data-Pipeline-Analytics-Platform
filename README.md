@@ -1,4 +1,5 @@
 # AI Job Market Intelligence Pipeline
+<img width="1920" height="1080" alt="Screenshot from 2026-06-08 22-27-05" src="https://github.com/user-attachments/assets/f0e7f516-3807-42e5-8e34-f94269093657" />
 
 An end-to-end data platform that analyzes AI's impact on the job market — tracking jobs growing despite AI, jobs vulnerable to automation, emerging skills, AI hiring trends, and industry-level disruption.
 
