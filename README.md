@@ -163,7 +163,3 @@ score, category = predict_risk("Data entry clerk responsible for manual filing..
 ```bash
 python -m pytest tests/ -v
 ```
-
-## License
-
-MIT
